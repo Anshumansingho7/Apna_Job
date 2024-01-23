@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  experience_required: 1
+  salary: 9.99
+  field: MyString
+  skills_required: MyString
+  job_seeker: one
+
+two:
+  experience_required: 1
+  salary: 9.99
+  field: MyString
+  skills_required: MyString
+  job_seeker: two
