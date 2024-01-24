@@ -1,8 +1,5 @@
 class Api::V1::JobRecruitersController < ApplicationController
     before_action :authenticate_user!
-    
-
-
     before_action :set_Recuiter, only: [:show, :update]
     
     def show 

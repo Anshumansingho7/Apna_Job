@@ -1,0 +1,2 @@
+class RejectJobsController < ApplicationController
+end

@@ -10,26 +10,20 @@ class Api::V1::JobSeekersController < ApplicationController
     end
 
     def create 
-        if current_user.role === "job_seeker"
-            if current_user.job_seeker.present?
-                render json: {
-                    status: :unprocessable_entity
-                } 
-            else
-                @job_seeker = current_user.build_job_seeker(job_seeker_params)
-                if @job_seeker.save
-                    render json: @job_seeker, status: :ok
-                else
-                    render json: {
-                        data: @job_seekers.errors.full_messages,
-                        status: 'failed'
-                    },status: :unprocessable_entity
-                end
-            end
-        else
+        if current_user.job_seeker.present?
             render json: {
-                message: "You cannot create company your role is recuiter"
-            }
+                status: :unprocessable_entity
+            } 
+        else
+            @job_seeker = current_user.build_job_seeker(job_seeker_params)
+            if @job_seeker.save
+                render json: @job_seeker, status: :ok
+            else
+                render json: {
+                    data: @job_seekers.errors.full_messages,
+                    status: 'failed'
+                },status: :unprocessable_entity
+            end
         end
     end
 
@@ -58,7 +52,7 @@ class Api::V1::JobSeekersController < ApplicationController
     end
 
     def job_seeker_params
-        params.require(:job_seeker).permit(:name, :address, :phone_no, :qualification, :skills, :hobbies, :experience)
+        params.require(:job_seeker).permit(:name, :address, :phone_no, :qualification, :skills, :hobbies, :experience, :job_field)
     end
 
     #def authenticate_user!
