@@ -3,10 +3,9 @@ class Api::V1::JobsController < ApplicationController
     before_action :set_job, only: [:show, :update, :destroy]
 
     def index
-        @jobs = Job.all
+        @jobs = Job.where(job_recruiter_id: current_user.job_recruiter.id)
         render json: @jobs
     end
-
     
 
     def show 

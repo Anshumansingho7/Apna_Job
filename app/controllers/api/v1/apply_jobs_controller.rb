@@ -5,22 +5,22 @@ class Api::V1::ApplyJobsController < ApplicationController
             @job = Job.find(params[:job_id])
             @job_seeker = current_user.job_seeker
             @job_application = JobApplication.new(
-                 name: @job_seeker.name,
-                 qualification: @job_seeker.qualification,
-                 skills: @job_seeker.skills,
-                 address: @job_seeker.address,
-                 phone_no: @job_seeker.phone_no,
-                 experience: @job_seeker.experience,
-                 job_recruiter_id: @job.job_recruiter_id,
-                 job_id: @job.id,
-                 status: "pending"
-                 )
+                name: @job_seeker.name,
+                qualification: @job_seeker.qualification,
+                skills: @job_seeker.skills,
+                address: @job_seeker.address,
+                phone_no: @job_seeker.phone_no,
+                experience: @job_seeker.experience,
+                job_recruiter_id: @job.job_recruiter_id,
+                job_id: @job.id,
+                status: "pending"
+                )
             @job_recruiter = JobRecruiter.find_by(id: @job.job_recruiter_id)
             
             
             if @job_application.save
                 @job_applied = JobApplied.new(
-                    company_name: @job_recruiter.Comapany_name,
+                    company_name: @job_recruiter.name,
                     experience_required: @job.experience_required,
                     salary: @job.salary,
                     address: @job_recruiter.address,

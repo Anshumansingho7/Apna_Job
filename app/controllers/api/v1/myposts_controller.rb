@@ -1,0 +1,8 @@
+class Api::V1::MypostsController < ApplicationController
+
+    def index 
+        posts = Post.where(user_id: current_user.id)
+        comments = Comment.where(post_id: posts.pluck(:id))
+        render json: posts, include: 'comments'
+    end
+end

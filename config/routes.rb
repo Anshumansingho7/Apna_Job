@@ -16,7 +16,9 @@ Rails.application.routes.draw do
   namespace :api do 
     namespace :v1 do
       resources :job_recruiters
+      resources :search_job, only: [:index]
       resources :job_seekers
+      resources :myposts, only: [:index]
       resources :jobs do
         resources :apply_jobs, only: [:create]
       end

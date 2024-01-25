@@ -1,16 +1,16 @@
 class Api::V1::CommentsController < ApplicationController
-    before_action :authenticate_user!
-    before_action :set_post
-    before_action :set_comment, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :set_post
+  before_action :set_comment, only: [:show, :update, :destroy]
 
-    def index
-        @comments = Comment.all
-        render json: @comments
-    end
+  def index
+    @comments = Comment.all
+    render json: @comments
+  end
 
-    def show 
-        render json: @comment
-    end
+  def show 
+      render json: @comment
+  end
 
     def create 
         @comment = @post.comments.new(comment_params.merge(user: current_user))

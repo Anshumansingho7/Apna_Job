@@ -13,10 +13,10 @@ class User < ApplicationRecord
          :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
-  has_one :job_recruiter
-  has_one :job_seeker
-  has_many :posts
-  has_many :comments
+  has_one :job_recruiter, dependent: :destroy
+  has_one :job_seeker, dependent: :destroy
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   #ROLES = %w{job_seeker job_recruiter}
 

@@ -8,20 +8,14 @@ class Api::V1::JobRecruitersController < ApplicationController
 
     def create
         if current_user.role === "job_recruiter"
-            if current_user.job_recruiter.present?
-                render json: {
-                    status: :unprocessable_entity
-                } 
+            @job_recruiter = current_user.build_job_recruiter(job_recruiter_params)
+            if @job_recruiter.save
+                render json: @job_recruiter, status: :ok
             else
-                @job_recruiter = current_user.build_job_recruiter(job_recruiter_params)
-                if @job_recruiter.save
-                    render json: @job_recruiter, status: :ok
-                else
-                    render json: {
-                        data: @job_recruiter.errors.full_messages,
-                        status: 'failed'
-                    },status: :unprocessable_entity
-                end
+                render json: {
+                    data: @job_recruiter.errors.full_messages,
+                    status: 'failed'
+                },status: :unprocessable_entity
             end
         else
             render json: {
@@ -55,6 +49,6 @@ class Api::V1::JobRecruitersController < ApplicationController
     end
 
     def job_recruiter_params
-        params.require(:job_recruiter).permit(:Comapany_name, :address, :phone_no, :Gst_no)
+        params.require(:job_recruiter).permit(:name, :address, :phone_no, :Gst_no)
     end
 end

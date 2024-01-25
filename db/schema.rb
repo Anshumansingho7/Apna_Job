@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_24_142142) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_25_104129) do
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.bigint "user_id", null: false
@@ -56,7 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_24_142142) do
   end
 
   create_table "job_recruiters", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "Comapany_name"
+    t.string "name"
     t.string "Gst_no"
     t.string "address"
     t.string "phone_no"

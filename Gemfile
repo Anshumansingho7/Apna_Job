@@ -51,3 +51,7 @@ gem "devise-jwt"
 
 
 gem 'cancancan'
+
+
+gem 'ransack'
+
