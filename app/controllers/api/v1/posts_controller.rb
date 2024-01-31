@@ -1,14 +1,21 @@
 class Api::V1::PostsController < ApplicationController
     before_action :authenticate_user!
-    before_action :set_post, only: [:show, :update, :destroy]
+    before_action :set_post, only: [:show, :destroy]
 
     def index
-        @posts = Post.all
-        render json: @posts
+        #@posts = Post.all
+        #comments = Comment.all.count
+        #likes = Like.all.count
+        #render json: @posts, include: ['comments', 'likes']
+        @posts = Post.all.includes(:comments, :likes)
+        render json: @posts, methods: [:total_comments, :total_likes]
     end
 
     def show 
         render json: @post
+        comments = Comment.all
+        likes = Like.all
+        render json: @posts, include: ['comments', 'likes']
     end
 
     def create 
@@ -25,13 +32,31 @@ class Api::V1::PostsController < ApplicationController
 
 
     def update
-        if @post.update(post_params)
-            render json: @post, status: :ok
-        else
+        post = Post.find(params[:id])
+        #debugger
+        like = Like.find_by(post_id: post.id, user_id: current_user.id)
+        if like.present?
+            like.destroy
+            #post.update(like: post.like - 1)
             render json: {
-                data: @post.errors.full_messages,
-                status: 'failed'
-            },status: :unprocessable_entity
+                message: "Post unliked succesfully"
+            }
+        else
+            like = Like.new(
+                post_id: post.id,
+                user_id: current_user.id
+            )
+            if like.save
+                #post.update(like: post.like + 1)
+                render json: {
+                    message: "post like succesfully"
+                }
+            else 
+                render json: {
+                    data: like.errors.full_messages,
+                    status: 'failed'
+                },status: :unprocessable_entity
+            end
         end
     end
 
@@ -58,7 +83,7 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def post_params
-        params.require(:posts).permit(:description, :image)
+        params.require(:posts).permit(:description, :image, :like)
     end
 
     #def authenticate_user!

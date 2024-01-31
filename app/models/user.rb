@@ -8,7 +8,6 @@ class User < ApplicationRecord
 
 
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
@@ -17,8 +16,12 @@ class User < ApplicationRecord
   has_one :job_seeker, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
-
+  has_many :likes, dependent: :destroy
   #ROLES = %w{job_seeker job_recruiter}
+
+  def update_password_without_current(params)
+    update(params)
+  end
 
   def jwt_payload
     super

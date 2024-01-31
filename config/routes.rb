@@ -6,8 +6,13 @@ Rails.application.routes.draw do
     :password => 'my_devise/passwords'
   }
 
-  namespace :my_devise do
-    resource :password, only: [:edit, :update]
+  namespace :my_devise, path: 'my_devise' do
+    resource :passwords, only: [] do
+      member do
+        post 'update'
+        post 'updatepassword'
+      end
+    end
   end
 
   get '/member_detail' => "members#index"
@@ -15,8 +20,14 @@ Rails.application.routes.draw do
 
   namespace :api do 
     namespace :v1 do
-      resources :job_recruiters
-      resources :search_job, only: [:index]
+      resources :job_recruiters, only: [:show, :update, :destroy]
+      get '/search/job_recruiters', to: 'job_recruiters#searchindex'
+      get '/search/job_seekers', to: 'job_seekers#searchindex'
+      get '/search/jobs', to: 'jobs#searchindex'
+      get '/shorting/job_recruiters', to: 'job_recruiters#shortingindex'
+      get '/shorting/job_seekers', to: 'job_seekers#shortingindex'
+      get '/shorting/jobs', to: 'jobs#shortingindex'
+      
       resources :job_seekers
       resources :myposts, only: [:index]
       resources :jobs do
@@ -29,6 +40,7 @@ Rails.application.routes.draw do
       resources :jobs_applied, only: [:index]
       resources :posts do
         resources :comments
+        get '/likes', to: 'comments#likeindex'
       end
       get "/available_jobs" => "available_jobs#index"
     end

@@ -6,7 +6,34 @@ class Api::V1::JobsController < ApplicationController
         @jobs = Job.where(job_recruiter_id: current_user.job_recruiter.id)
         render json: @jobs
     end
-    
+
+    def searchindex
+        @parameter = params[:search].downcase
+        column_name = params[:column_name]
+        if column_name == nil
+            job = Job.search(@parameter)
+        else
+            if Job.has_attribute?("#{column_name}")
+                job = Job.where("lower(#{column_name}) LIKE ?","#{@parameter}%")
+            end
+        end
+        render json: {
+            job: job
+        }
+    end
+
+
+    def shortingindex
+        asds = params[:asds]
+        column_name = params[:column_name]
+        if Job.has_attribute?("#{column_name}")
+            job = Job.all.order("#{column_name} #{asds} ")
+        end
+        render json: {
+            job: job
+        }
+    end
+
 
     def show 
         render json: @job
@@ -17,15 +44,21 @@ class Api::V1::JobsController < ApplicationController
         if current_user.role === "job_recruiter"
             # job_recruiter_id = current_user.job_recruiter.id
             # @job = Job.new(job_params.merge(job_recruiter_id: job_recruiter_id))
-            @job=current_user.job_recruiter.job.new(job_params)
-            if @job.save
-                render json: @job, status: :ok
+            if current_user.job_recruiter.exists?
+                @job=current_user.job_recruiter.job.new(job_params)
+                if @job.save
+                    render json: @job, status: :ok
+                else
+                    render json: {
+                        data: @job.errors.full_messages,
+                        status: 'failed'
+                    },status: :unprocessable_entity
+                end
             else
                 render json: {
-                    data: @job.errors.full_messages,
-                    status: 'failed'
-                },status: :unprocessable_entity
-            end
+                    message: "You cannot create company please create company detail first"
+                }
+            end   
         else
             render json: {
                 message: "You cannot create company your role is seeker"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_25_104129) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_30_103141) do
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.bigint "user_id", null: false
@@ -92,6 +92,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_104129) do
     t.index ["job_recruiter_id"], name: "index_jobs_on_job_recruiter_id"
   end
 
+  create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_likes_on_post_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.string "image"
@@ -126,5 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_104129) do
   add_foreign_key "job_recruiters", "users"
   add_foreign_key "job_seekers", "users"
   add_foreign_key "jobs", "job_recruiters"
+  add_foreign_key "likes", "posts"
+  add_foreign_key "likes", "users"
   add_foreign_key "posts", "users"
 end

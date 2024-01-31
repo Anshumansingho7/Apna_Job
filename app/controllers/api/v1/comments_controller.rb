@@ -4,21 +4,28 @@ class Api::V1::CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :update, :destroy]
 
   def index
-    @comments = Comment.all
-    render json: @comments
+    post_id = params[:post_id]
+    comments = Comment.where(post_id: post_id)
+    render json: comments
+  end
+
+  def likeindex
+    post_id = params[:post_id]
+    likes = Like.where(post_id: post_id)
+    render json: likes
   end
 
   def show 
-      render json: @comment
+    render json: @comment
   end
 
     def create 
-        @comment = @post.comments.new(comment_params.merge(user: current_user))
-        if @comment.save
-            render json: @comment, status: :ok
+        comment = @post.comments.new(comment_params.merge(user: current_user))
+        if comment.save
+            render json: comment, status: :ok
         else
             render json: {
-                data: @comment.errors.full_messages,
+                data: comment.errors.full_messages,
                 status: 'failed'
             },status: :unprocessable_entity
         end
