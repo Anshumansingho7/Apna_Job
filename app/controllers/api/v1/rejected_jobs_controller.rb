@@ -21,5 +21,10 @@ class Api::V1::RejectedJobsController < ApplicationController
                 message: "This job application does not belong to you"
             }
         end
+    rescue ActiveRecord::RecordNotFound => error
+        render json: {
+            data: error.message, 
+            status: :unauthorized
+        }
     end
 end

@@ -47,6 +47,11 @@ class Api::V1::JobsController < ApplicationController
             if current_user.job_recruiter.exists?
                 @job=current_user.job_recruiter.job.new(job_params)
                 if @job.save
+                    notification = Notification.new(
+                        user_id: current_user.id,
+                        discription: "your job has been succesfully created"
+                    )
+                    notification.save
                     render json: @job, status: :ok
                 else
                     render json: {
@@ -69,6 +74,11 @@ class Api::V1::JobsController < ApplicationController
 
     def update
         if @job.update(job_params)
+            notification = Notification.new(
+                user_id: current_user.id,
+                discription: "your job has been succesfully updated"
+            )
+            notification.save
             render json: @job, status: :ok
         else
             render json: {

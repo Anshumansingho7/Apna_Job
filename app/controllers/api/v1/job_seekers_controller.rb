@@ -39,6 +39,11 @@ class Api::V1::JobSeekersController < ApplicationController
         if current_user.role === "job_seeker"
             job_seeker = current_user.build_job_seeker(job_seeker_params)
             if job_seeker.save
+                notification = Notification.new(
+                    user_id: current_user.id,
+                    discription: "your detail has been succesfully saved"
+                )
+                notification.save
                 render json: job_seeker, status: :ok
             else
                 render json: {
@@ -56,6 +61,11 @@ class Api::V1::JobSeekersController < ApplicationController
 
     def update
         if @job_seeker.update(job_seeker_params)
+            notification = Notification.new(
+                user_id: current_user.id,
+                discription: "your detail has been succesfully updated"
+            )
+            notification.save
             render json: @job_seeker, status: :ok
         else
             render json: {

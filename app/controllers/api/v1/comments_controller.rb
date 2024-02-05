@@ -1,27 +1,36 @@
 class Api::V1::CommentsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_post
-  before_action :set_comment, only: [:show, :update, :destroy]
+    before_action :authenticate_user!
+    before_action :set_post
+    before_action :set_comment, only: [:show, :update, :destroy]
 
-  def index
-    post_id = params[:post_id]
-    comments = Comment.where(post_id: post_id)
-    render json: comments
-  end
+    def index
+        post_id = params[:post_id].to_i
+        comments = Comment.where(post_id: post_id)
+        render json: comments
+    end
 
-  def likeindex
-    post_id = params[:post_id]
-    likes = Like.where(post_id: post_id)
-    render json: likes
-  end
-
-  def show 
-    render json: @comment
-  end
+    def show 
+        render json: @comment
+    end
 
     def create 
         comment = @post.comments.new(comment_params.merge(user: current_user))
         if comment.save
+            if current_user == "job_seeker"
+                @job_seeker = current_user.job_seeker
+                notification = Notification.new(
+                    user_id: @post.user_id,
+                    discription: "#{@job_seeker.name} has commented on your post"
+                )
+                notification.save
+            else
+                @job_recruiter = current_user.job_recruiter 
+                notification = Notification.new(
+                    user_id: @post.user_id,
+                    discription: "#{@job_recruiter.name} has commented on your post"
+                )
+                notification.save
+            end
             render json: comment, status: :ok
         else
             render json: {
@@ -29,12 +38,18 @@ class Api::V1::CommentsController < ApplicationController
                 status: 'failed'
             },status: :unprocessable_entity
         end
+    rescue ActiveRecord::RecordNotFound => error
+        render json: {
+            data: error.message, 
+            status: :unauthorized
+        }
     end
 
 
     def update
         if @comment.update(comment_params)
             render json: @comment, status: :ok
+
         else
             render json: {
                 data: @comment.errors.full_messages,

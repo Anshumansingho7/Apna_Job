@@ -1,21 +1,28 @@
 class Api::V1::PostsController < ApplicationController
     before_action :authenticate_user!
-    before_action :set_post, only: [:show, :destroy]
+    before_action :set_post, only: [:show, :destroy, :update]
 
     def index
         #@posts = Post.all
         #comments = Comment.all.count
         #likes = Like.all.count
         #render json: @posts, include: ['comments', 'likes']
+        #debugger
         @posts = Post.all.includes(:comments, :likes)
         render json: @posts, methods: [:total_comments, :total_likes]
     end
 
     def show 
-        render json: @post
+        post = Post.find(params[:id])
+        render json: post
         comments = Comment.all
-        likes = Like.all
-        render json: @posts, include: ['comments', 'likes']
+        likes = Like.where(status: "like")
+        render json: post, include: ['comments', 'likes']
+    rescue ActiveRecord::RecordNotFound => error
+        render json: {
+            data: error.message, 
+            status: :unauthorized
+        }
     end
 
     def create 
@@ -32,44 +39,38 @@ class Api::V1::PostsController < ApplicationController
 
 
     def update
-        post = Post.find(params[:id])
-        #debugger
-        like = Like.find_by(post_id: post.id, user_id: current_user.id)
-        if like.present?
-            like.destroy
-            #post.update(like: post.like - 1)
-            render json: {
-                message: "Post unliked succesfully"
-            }
-        else
-            like = Like.new(
-                post_id: post.id,
-                user_id: current_user.id
-            )
-            if like.save
-                #post.update(like: post.like + 1)
+        if @post.user_id == current_user.id
+            if @post.update(post_params)
+                render json: @post, status: :ok
+            else
                 render json: {
-                    message: "post like succesfully"
-                }
-            else 
-                render json: {
-                    data: like.errors.full_messages,
+                    data: @post.errors.full_messages,
                     status: 'failed'
                 },status: :unprocessable_entity
             end
-        end
+        else
+            render json: {
+                message: "this post doesnot belong to you"
+            }  
+        end     
     end
 
     def destroy
-        if @post.destroy
+        if @post.user_id == current_user.id
+            if @post.destroy
+                render json: {
+                  message:  "post destroy successfully"
+                }
+            else 
+                render json: {
+                    data: @post.errors.full_messages,
+                }, status: :unprocessable_entity
+            end
+        else
             render json: {
-              message:  "post destroy successfully"
-            }
-        else 
-            render json: {
-                data: @post.errors.full_messages,
-            }, status: :unprocessable_entity
-        end
+                message: "this post doesnot belong to you"
+            }  
+        end    
     end
     private
 
@@ -83,7 +84,7 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def post_params
-        params.require(:posts).permit(:description, :image, :like)
+        params.require(:posts).permit(:description, :image)
     end
 
     #def authenticate_user!

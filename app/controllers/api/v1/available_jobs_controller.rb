@@ -11,5 +11,10 @@ class Api::V1::AvailableJobsController < ApplicationController
                 message: "You cannot create company your role is seeeker"
             }
         end
+    rescue ActiveRecord::RecordNotFound => error
+        render json: {
+            data: error.message, 
+            status: :unauthorized
+        }
     end
 end

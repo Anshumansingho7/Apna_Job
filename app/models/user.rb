@@ -4,7 +4,7 @@ class User < ApplicationRecord
   #has_many :JobSeekers
   #has_many :JobRecruiters
   validates :role, presence: true
-  validates :role, inclusion: { in: roles.keys } # Ensures the role is one of the defined enum values
+  validates :role, inclusion: { in: roles.keys }
 
 
   # Include default devise modules. Others available are:
@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   #ROLES = %w{job_seeker job_recruiter}
 
   def update_password_without_current(params)

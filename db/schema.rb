@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_30_103141) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_05_061532) do
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.bigint "user_id", null: false
@@ -101,6 +101,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_30_103141) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
+  create_table "notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "discription"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "description"
     t.string "image"
@@ -137,5 +145,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_30_103141) do
   add_foreign_key "jobs", "job_recruiters"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "posts", "users"
 end

@@ -38,10 +38,12 @@ Rails.application.routes.draw do
       resources :jobs_applications, only: [:index] do 
       end
       resources :jobs_applied, only: [:index]
+      resources :notifications, only: [:index]
       resources :posts do
         resources :comments
-        get '/likes', to: 'comments#likeindex'
+        resources :likes
       end
+      get '/likes', to: 'likes#likeindex'
       get "/available_jobs" => "available_jobs#index"
     end
   end
