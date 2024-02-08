@@ -6,7 +6,8 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
 
     def respond_with(resource, options={})
       if resource.persisted?
-        NotificationMailer.registration().deliver_now
+        SendEmailJob.set(wait: 10.seconds).perform_later("ashaktawat43@gmail.com")
+        #NotificationMailer.registration().deliver_now
         render json: {
           status: {code: 200, message: 'Signed up successfully'}
         }, status: :ok

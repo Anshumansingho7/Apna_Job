@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   get '/member_detail' => "members#index"
   get "/current_user" => "coustmers#index"
+  delete "/delete_account" => "coustmers#destroy"
 
   namespace :api do 
     namespace :v1 do

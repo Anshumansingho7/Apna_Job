@@ -1,9 +1,10 @@
 <h1>Hello sir</h1>
 
 <p>
-  Welcome to the Apna_job.com 
-  Thankyou for conecting with us
-  <%= image_tag attachments['Apna_job_logo.jpg'].url %>
-  <%= image_tag attachments['Terms_and_condition.pdf'].url %>
+  Welcome to Apna_job.com. Thank you for connecting with us.
+</p>
 
+<p>
+  Please find attached the Terms and Conditions document:
+  <%= link_to 'Download PDF', attachments['Terms_and_condition.pdf'].url %>
 </p>

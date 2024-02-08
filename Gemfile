@@ -62,3 +62,5 @@ gem 'elasticsearch-model', '~> 7.0'
 gem 'elasticsearch-rails', '~> 7.0'
 
 
+
+gem "sidekiq", "~> 7.2"
