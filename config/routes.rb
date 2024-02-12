@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
   namespace :api do 
     namespace :v1 do
-      resources :job_recruiters, only: [:show, :update, :destroy]
+      resources :job_recruiters, only: [:show, :update, :create]
       get '/search/job_recruiters', to: 'job_recruiters#searchindex'
       get '/search/job_seekers', to: 'job_seekers#searchindex'
       get '/search/jobs', to: 'jobs#searchindex'
@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       
       resources :job_seekers
       resources :myposts, only: [:index]
+      patch '/upload_image/:id', to: "posts#crete_image"
       resources :jobs do
         resources :apply_jobs, only: [:create]
       end

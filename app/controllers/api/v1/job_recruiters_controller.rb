@@ -1,5 +1,4 @@
 class Api::V1::JobRecruitersController < ApplicationController
-    before_action :authenticate_user!
     before_action :set_Recuiter, only: [:show, :update]
 
     def searchindex
@@ -35,6 +34,7 @@ class Api::V1::JobRecruitersController < ApplicationController
     end
 
     def create
+        debugger
         if current_user.role === "job_recruiter"
             @job_recruiter = current_user.build_job_recruiter(job_recruiter_params)
             if @job_recruiter.save

@@ -1,11 +1,12 @@
 class ApplicationController < ActionController::API
     before_action :authenticate_user!
-    #before_action :check_jwt_payload
+    before_action :check_jwt_payload
 
 
     private
 
     def check_jwt_payload
+        
         if request.headers["authorization"].present? && request.headers["authorization"].include?("Bearer")
             #jwt_payload = JWT.decode(request.headers["authorization"].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
             jwt_token = request.headers["authorization"].split(' ').last

@@ -1,5 +1,7 @@
 class MyDevise::PasswordsController < ApplicationController
     before_action :authenticate_user!, except: [:update, :updatepassword]
+    skip_before_action :check_jwt_payload
+
 
     respond_to :json
 
@@ -40,6 +42,17 @@ class MyDevise::PasswordsController < ApplicationController
 
     def password_params
         params.require(:user).permit(:password, :password_confirmation)
+    end
+
+    def check_jwt_payload
+        if request.headers["authorization"].present? && request.headers["authorization"].include?("Bearer")
+            #jwt_payload = JWT.decode(request.headers["authorization"].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
+            jwt_token = request.headers["authorization"].split(' ').last
+            jwt_payload = JWT.decode(jwt_token, Rails.application.credentials.fetch(:secret_key_base)).first
+            current_user = User.find(jwt_payload['sub'])
+        else
+            render json: { error: "Unauthorized" }, status: :unauthorized
+        end
     end
     
 end

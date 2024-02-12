@@ -14,9 +14,9 @@ class Api::V1::PostsController < ApplicationController
 
     def show 
         post = Post.find(params[:id])
-        render json: post
+        #render json: post
         comments = Comment.all
-        likes = Like.where(status: "like")
+        likes = Like.all
         render json: post, include: ['comments', 'likes']
     rescue ActiveRecord::RecordNotFound => error
         render json: {
@@ -25,10 +25,32 @@ class Api::V1::PostsController < ApplicationController
         }
     end
 
+
+    def crete_image 
+        post = Post.find(params[:id])
+        if post.user_id == current_user.id
+            if post.update(post_params)
+                render json: post.picture_url, status: :ok
+            else
+                render json: {
+                data: post.errors.full_messages,
+                status: 'failed'
+                },status: :unprocessable_entity
+            end
+        else
+            render json: {
+                message: "this post doesnot belong to you"
+            }  
+        end
+    end
+
     def create 
         @post = current_user.posts.new(post_params)
         if @post.save
-            render json: @post, status: :ok
+            render json: {
+                data: @post.as_json.merge(url: @post.picture_url)
+                
+            },status: :ok
         else
             render json: {
                 data: @post.errors.full_messages,
@@ -84,8 +106,10 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def post_params
-        params.require(:posts).permit(:description, :image)
+        params.permit(:description, :image, :picture)
     end
+
+
 
     #def authenticate_user!
     #    jwt_payload = JWT.decode(request.headers["authorization"].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first

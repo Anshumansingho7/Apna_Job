@@ -5,6 +5,10 @@ class Api::V1::JobsController < ApplicationController
     def index
         @jobs = Job.where(job_recruiter_id: current_user.job_recruiter.id)
         render json: @jobs
+    rescue 
+        render json: {  
+            message: "You do not have any jobs"
+        }
     end
 
     def searchindex
@@ -44,7 +48,6 @@ class Api::V1::JobsController < ApplicationController
         if current_user.role === "job_recruiter"
             # job_recruiter_id = current_user.job_recruiter.id
             # @job = Job.new(job_params.merge(job_recruiter_id: job_recruiter_id))
-            if current_user.job_recruiter.exists?
                 @job=current_user.job_recruiter.job.new(job_params)
                 if @job.save
                     notification = Notification.new(
@@ -59,11 +62,6 @@ class Api::V1::JobsController < ApplicationController
                         status: 'failed'
                     },status: :unprocessable_entity
                 end
-            else
-                render json: {
-                    message: "You cannot create company please create company detail first"
-                }
-            end   
         else
             render json: {
                 message: "You cannot create company your role is seeker"
@@ -113,7 +111,7 @@ class Api::V1::JobsController < ApplicationController
             end
         else
             render json: {
-                message: "You cannot create company your role is seeker"
+                message: "You are not authorised for this role"
             }
         end
     rescue ActiveRecord::RecordNotFound => error

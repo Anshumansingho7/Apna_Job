@@ -1,7 +1,7 @@
 class Api::V1::CommentsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_post
-    before_action :set_comment, only: [:show, :update, :destroy]
+    before_action :set_comment, only: [:show, :destroy]
 
     def index
         post_id = params[:post_id].to_i
@@ -16,7 +16,7 @@ class Api::V1::CommentsController < ApplicationController
     def create 
         comment = @post.comments.new(comment_params.merge(user: current_user))
         if comment.save
-            if current_user == "job_seeker"
+            if current_user.role == "job_seeker"
                 @job_seeker = current_user.job_seeker
                 notification = Notification.new(
                     user_id: @post.user_id,
@@ -45,34 +45,32 @@ class Api::V1::CommentsController < ApplicationController
         }
     end
 
-
-    def update
-        if @comment.update(comment_params)
-            render json: @comment, status: :ok
-
+    def destroy
+        if @comment.user_id == current_user.id
+            if @comment.destroy
+                render json: {
+                  message:  "comment destroy successfully"
+                }
+            else 
+                render json: {
+                    data: @comment.errors.full_messages,
+                }, status: :unprocessable_entity
+            end
         else
             render json: {
-                data: @comment.errors.full_messages,
-                status: 'failed'
-            },status: :unprocessable_entity
-        end
-    end
-
-    def destroy
-        if @comment.destroy
-            render json: {
-              message:  "comment destroy successfully"
+                message: "you cannot delete this comment"
             }
-        else 
-            render json: {
-                data: @comment.errors.full_messages,
-            }, status: :unprocessable_entity
         end
     end
     private
 
     def set_post
         @post = Post.find(params[:post_id])
+    rescue ActiveRecord::RecordNotFound => error
+        render json: {
+            data: error.message, 
+            status: :unauthorized
+        }
     end
 
     def set_comment
