@@ -24,7 +24,13 @@ class Api::V1::ApplyJobsController < ApplicationController
                     user_id: job_recruiter.user_id,
                     discription: "you have a new job application"
                 )
-                notification.save
+                if notification.save
+                else 
+                    render json: {
+                        data: notification.errors.full_messages,
+                        status: 'failed'
+                    },status: :unprocessable_entity
+                end
                 job_applied = JobApplied.new(
                     company_name: job_recruiter.name,
                     experience_required: job.experience_required,
@@ -37,15 +43,21 @@ class Api::V1::ApplyJobsController < ApplicationController
                     job_application_id: job_application.id,
                     status: "pending"
                 )
-                if  job_applied.save
-                notification = Notification.new(
-                    user_id: current_user.id,
-                    discription: "your job appilication submitted succesfully"
-                )
-                notification.save
+                if job_applied.save
+                    notification = Notification.new(
+                        user_id: current_user.id,
+                        discription: "your job appilication submitted succesfully"
+                    )
+                    if notification.save
+                    else 
+                        render json: {
+                            data: notification.errors.full_messages,
+                            status: 'failed'
+                        },status: :unprocessable_entity
+                    end
                     render json: {
                       message: "Job application created successfully"
-                    }
+                    },status: 200
                 else
                     render json: {
                       message: "Failed to create job application",
@@ -61,7 +73,7 @@ class Api::V1::ApplyJobsController < ApplicationController
         render json: {
             data: error.message, 
             status: :unauthorized
-        }
+        },status: 404
     end
     
 

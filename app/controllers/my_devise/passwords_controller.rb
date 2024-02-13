@@ -6,8 +6,6 @@ class MyDevise::PasswordsController < ApplicationController
     respond_to :json
 
     def update
-      jwt_payload = JWT.decode(request.headers["authorization"].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
-      current_user = User.find(jwt_payload['sub'])
       user = User.find_by(id: params[:id])
       if user
         reset_token = SecureRandom.urlsafe_base64.to_s
@@ -20,8 +18,6 @@ class MyDevise::PasswordsController < ApplicationController
     end
 
     def updatepassword
-      jwt_payload = JWT.decode(request.headers["authorization"].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
-      current_user = User.find(jwt_payload['sub'])
       user = User.find_by(reset_password_token: params[:reset_token])
       if user && user.reset_password_sent_at.present? && user.reset_password_sent_at > 2.hours.ago
         if user.update_password_without_current(password_params)
@@ -44,15 +40,6 @@ class MyDevise::PasswordsController < ApplicationController
         params.require(:user).permit(:password, :password_confirmation)
     end
 
-    def check_jwt_payload
-        if request.headers["authorization"].present? && request.headers["authorization"].include?("Bearer")
-            #jwt_payload = JWT.decode(request.headers["authorization"].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
-            jwt_token = request.headers["authorization"].split(' ').last
-            jwt_payload = JWT.decode(jwt_token, Rails.application.credentials.fetch(:secret_key_base)).first
-            current_user = User.find(jwt_payload['sub'])
-        else
-            render json: { error: "Unauthorized" }, status: :unauthorized
-        end
-    end
+    
     
 end

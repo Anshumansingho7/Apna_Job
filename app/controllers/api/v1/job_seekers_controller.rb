@@ -15,7 +15,7 @@ class Api::V1::JobSeekersController < ApplicationController
         end
         render json: {
             job_seeker: job_seeker
-        }
+        },status: 200
     end
 
     def shortingindex
@@ -26,7 +26,7 @@ class Api::V1::JobSeekersController < ApplicationController
         end
         render json: {
             job_seeker: job_seeker
-        }
+        },status: 200
     end
 
     
@@ -53,7 +53,7 @@ class Api::V1::JobSeekersController < ApplicationController
         else
             render json: {
                 message: "You cannot create company your role is recuiter"
-            }
+            },status: :unprocessable_entity
         end
     end
 
@@ -83,7 +83,7 @@ class Api::V1::JobSeekersController < ApplicationController
         render json: {
             data: error.message, 
             status: :unauthorized
-        }
+        },status: 404
     end
 
     def job_seeker_params

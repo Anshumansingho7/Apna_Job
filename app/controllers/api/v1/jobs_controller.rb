@@ -5,10 +5,6 @@ class Api::V1::JobsController < ApplicationController
     def index
         @jobs = Job.where(job_recruiter_id: current_user.job_recruiter.id)
         render json: @jobs
-    rescue 
-        render json: {  
-            message: "You do not have any jobs"
-        }
     end
 
     def searchindex
@@ -23,7 +19,7 @@ class Api::V1::JobsController < ApplicationController
         end
         render json: {
             job: job
-        }
+        },status: 200
     end
 
 

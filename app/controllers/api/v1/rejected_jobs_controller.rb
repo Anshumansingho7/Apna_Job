@@ -11,6 +11,19 @@ class Api::V1::RejectedJobsController < ApplicationController
                 render json: {
                    message: "Job Rejected succesfully"
                 }
+                job_seeker = JobSeeker.where(id: job_applied.job_seeker_id)
+                user = User.where(id: job_seeker.user_id)
+                notification = Notification.new(
+                    user_id: user.id,
+                    discription: "Sorry to inform you #{job_seeker.name} your job application has been rejected"
+                    )
+                if notification.save
+                else 
+                  render json: {
+                        data: notification.errors.full_messages,
+                        status: 'failed'
+                  },status: :unprocessable_entity
+                end
             else 
                 render json: {
                    message: "Failed to reject job"

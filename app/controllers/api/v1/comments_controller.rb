@@ -16,20 +16,29 @@ class Api::V1::CommentsController < ApplicationController
     def create 
         comment = @post.comments.new(comment_params.merge(user: current_user))
         if comment.save
-            if current_user.role == "job_seeker"
-                @job_seeker = current_user.job_seeker
-                notification = Notification.new(
-                    user_id: @post.user_id,
-                    discription: "#{@job_seeker.name} has commented on your post"
-                )
-                notification.save
+            if current_user.id = comment.user_id
+                post
             else
-                @job_recruiter = current_user.job_recruiter 
-                notification = Notification.new(
-                    user_id: @post.user_id,
-                    discription: "#{@job_recruiter.name} has commented on your post"
-                )
-                notification.save
+                if current_user.role == "job_seeker"
+                    @job_seeker = current_user.job_seeker
+                    notification = Notification.new(
+                        user_id: @post.user_id,
+                        discription: "#{@job_seeker.name} has commented on your post"
+                    )
+                else
+                    @job_recruiter = current_user.job_recruiter 
+                    notification = Notification.new(
+                        user_id: @post.user_id,
+                        discription: "#{@job_recruiter.name} has commented on your post"
+                    )
+                end
+                if notification.save
+                else 
+                    render json: {
+                        data: notification.errors.full_messages,
+                        status: 'failed'
+                    },status: :unprocessable_entity
+                end
             end
             render json: comment, status: :ok
         else
@@ -62,6 +71,8 @@ class Api::V1::CommentsController < ApplicationController
             }
         end
     end
+
+
     private
 
     def set_post

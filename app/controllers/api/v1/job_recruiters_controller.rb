@@ -14,7 +14,7 @@ class Api::V1::JobRecruitersController < ApplicationController
         end
         render json: {
             job_recruiter: job_recruiter.as_json(include: 'job'),
-        }
+        },status: 200
     end
 
     def shortingindex
@@ -25,7 +25,7 @@ class Api::V1::JobRecruitersController < ApplicationController
         end
         render json: {
             job_recruiter: job_recruiter
-        }
+        },status: 200
     end
 
     
@@ -53,7 +53,7 @@ class Api::V1::JobRecruitersController < ApplicationController
         else
             render json: {
                 message: "You cannot create company your role is seeeker"
-            }
+            },status: 403
         end
     end
 
@@ -83,7 +83,7 @@ class Api::V1::JobRecruitersController < ApplicationController
         render json: {
             data: error.message, 
             status: :unauthorized
-        }
+        },status: 404
     end
 
     def job_recruiter_params

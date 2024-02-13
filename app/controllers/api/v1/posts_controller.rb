@@ -30,7 +30,7 @@ class Api::V1::PostsController < ApplicationController
         post = Post.find(params[:id])
         if post.user_id == current_user.id
             if post.update(post_params)
-                render json: post.picture_url, status: :ok
+                render json: post.picture_urls, status: :ok
             else
                 render json: {
                 data: post.errors.full_messages,
@@ -48,8 +48,7 @@ class Api::V1::PostsController < ApplicationController
         @post = current_user.posts.new(post_params)
         if @post.save
             render json: {
-                data: @post.as_json.merge(url: @post.picture_url)
-                
+                data: @post.as_json.merge(url: @post.picture_urls)                
             },status: :ok
         else
             render json: {
@@ -106,7 +105,7 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def post_params
-        params.permit(:description, :image, :picture)
+        params.permit(:description, :image, pictures: [])
     end
 
 
