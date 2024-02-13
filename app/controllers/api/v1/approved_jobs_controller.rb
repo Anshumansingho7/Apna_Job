@@ -13,14 +13,14 @@ class Api::V1::ApprovedJobsController < ApplicationController
         job_seeker = JobSeeker.where(id: job_applied.job_seeker_id)
         user = User.where(id: job_seeker.user_id)
         notification = Notification.new(
-            user_id: user.id,
-            discription: "congratulation #{job_seeker.name} your job application has been approved"
+          user_id: user.id,
+          discription: "congratulation #{job_seeker.name} your job application has been approved"
           )
         if notification.save
         else 
           render json: {
-              data: notification.errors.full_messages,
-              status: 'failed'
+            data: notification.errors.full_messages,
+            status: 'failed'
           },status: :unprocessable_entity
         end
       else
