@@ -1,8 +1,6 @@
 class SendEmailJob < ApplicationJob
-  queue_as :default
 
-  def perform(email)
-    # Do something later
-    NotificationMailer.with(email: email).registration.deliver_now
+  def perform
+    NotificationMailer.with(email: "ashaktawat43@gmail.com").registration.deliver_now
   end
 end

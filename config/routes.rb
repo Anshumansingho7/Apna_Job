@@ -31,7 +31,6 @@ Rails.application.routes.draw do
       
       resources :job_seekers
       resources :myposts, only: [:index]
-      patch '/upload_image/:id', to: "posts#crete_image"
       resources :jobs do
         resources :apply_jobs, only: [:create]
       end

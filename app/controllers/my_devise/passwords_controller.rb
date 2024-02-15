@@ -2,7 +2,6 @@ class MyDevise::PasswordsController < ApplicationController
     before_action :authenticate_user!, except: [:update, :updatepassword]
     skip_before_action :check_jwt_payload
 
-
     respond_to :json
 
     def update

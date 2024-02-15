@@ -3,6 +3,7 @@ class JobSeeker < ApplicationRecord
   validates :name, :qualification, :address, presence: true
   validates :phone_no, presence: true, uniqueness: true 
   has_many :job_applied, dependent: :destroy
+  
   def self.search(search)
     if search
       scolumns = JobSeeker.column_names

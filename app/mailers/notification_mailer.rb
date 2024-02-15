@@ -5,12 +5,7 @@ class NotificationMailer < ApplicationMailer
   def registration()
     email = params[:email]
     attachments.inline['Terms_and_condition.pdf'] = File.read("Terms_and_condition.pdf")
-    #mailed = ["anshuman@webkorps.com", "anshumansinghshaktawat5@gmail.com"]
-    #cc_recipients = ["ashaktawat43@gmail.com", "anshumanshaktawat980@gmail.com"]
-    #mail(to: mailed , cc: cc_recipients)
-    #NotificationWorker.perform_in(1.minutes)
     mail(to: email, subject: 'Welcome mail')
-    #mail to: "ashaktawat43@gmail.com"
   end
 
   def password_change(reset_token)

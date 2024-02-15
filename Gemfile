@@ -63,6 +63,8 @@ gem 'elasticsearch-rails', '~> 7.0'
 
 gem 'shrine'
 
+gem 'rubocop', require: false
+
 
 gem "image_processing", ">= 1.2"
 

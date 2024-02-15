@@ -12,14 +12,6 @@ class Post < ApplicationRecord
     likes.count
   end
 
-  #def picture_url
-  #  if picture.attached?
-  #    Rails.application.routes.url_helpers.rails_blob_path(self.picture, only_path: true)
-  #  else
-  #    nil
-  #  end
-  #end
-
   def picture_urls
     if pictures.attached?
       self.pictures.map do |blob|
@@ -27,6 +19,16 @@ class Post < ApplicationRecord
       end
     else
       []
+    end
+  end
+
+  validate :validate_picture_type
+
+  private
+
+  def validate_picture_type
+    if pictures.attached? && pictures.any? { |blob| blob.content_type.in?(%w(application/pdf)) }
+      errors.add(:pictures, 'PDF files are not allowed')
     end
   end
 

@@ -2,9 +2,6 @@ class MyDevise::SessionsController < Devise::SessionsController
     before_action :configure_permitted_parameters
     skip_before_action :check_jwt_payload
 
-
-    private
-
     def respond_with(resource, options={})
       render json: {
         status: { code: 200, message: 'Logged in successfully.' },
@@ -28,6 +25,8 @@ class MyDevise::SessionsController < Devise::SessionsController
         }, status: :unauthorized
       end
     end
+
+    private
 
     def configure_permitted_parameters
         devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :role])
