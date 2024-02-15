@@ -15,4 +15,5 @@ class Api::V1::RejectedJobsController < ApplicationController
     NotificationMailer.job_rejected(job_application.name, job_applied.company_name).deliver_now
     create_notification(user.id, "Sorry to inform you #{job_seeker.name} your job application has been rejected")      
   end
+  
 end
