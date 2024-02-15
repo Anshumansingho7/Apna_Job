@@ -55,9 +55,7 @@ class Api::V1::LikesController < ApplicationController
       user_id: current_user.id,
     )
     if like.save
-      if current_user.id = post.user_id
-        post
-      else
+      unless current_user.id = post.user_id
         if current_user.role == "job_seeker"
           @job_seeker = current_user.job_seeker
           create_notification(post.user_id, "#{@job_seeker.name} has liked on your post #{post.id}") 
