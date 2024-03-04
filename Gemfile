@@ -27,7 +27,7 @@ gem "puma", ">= 5.0"
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem "bootsnap"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -48,16 +48,11 @@ end
 
 gem "devise"
 gem "devise-jwt"
-
-
 gem 'cancancan'
-
-
 gem 'ransack'
-
-
-gem 'elasticsearch-model', '~> 7.0'
-
+gem 'rswag-ui'
+gem 'rswag-api'
+gem 'brick'
 
 gem 'elasticsearch-rails', '~> 7.0'
 

@@ -19,8 +19,13 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential default-libmysqlclient-dev git libvips pkg-config
-
+    apt-get install --no-install-recommends -y \
+    build-essential \
+    default-libmysql2client-dev \
+    git \
+    libvips \
+    pkg-config
+    
 # Install application gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \

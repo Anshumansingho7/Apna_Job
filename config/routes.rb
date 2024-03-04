@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => '/api-docs'
   devise_for :users,
   :controllers => {
     :registrations => 'my_devise/registrations',
@@ -21,7 +23,7 @@ Rails.application.routes.draw do
 
   namespace :api do 
     namespace :v1 do
-      resources :job_recruiters, only: [:show, :update, :create]
+      resources :job_recruiters, except: [:destroy]
       get '/search/job_recruiters', to: 'job_recruiters#searchindex'
       get '/search/job_seekers', to: 'job_seekers#searchindex'
       get '/search/jobs', to: 'jobs#searchindex'
