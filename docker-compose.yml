@@ -1,21 +1,21 @@
-version: "3.8"
+version: "3.3"
 
 services:
   db:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: apna_job_production
-      MYSQL_USER: apna_job
+      MYSQL_DATABASE: apna_job_development
+      MYSQL_USER: root
       MYSQL_PASSWORD: root
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
     depends_on:
       - db
+    ports:
+      - "3000:3000" 
     environment:
-      RAILS_ENV: production
+      RAILS_ENV: development

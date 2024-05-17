@@ -14,8 +14,8 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
         }, status: :ok
       else
         render json: {
-          status: { message: 'User could not be created successfully', 
-          errors: resource.errors.full_messages}, status: :unprocessable_entity
+          message: 'User could not be created successfully', 
+          errors: resource.errors.full_messages
         } 
       end
     end
@@ -31,7 +31,7 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
             begin
               jwt_payload = JWT.decode(jwt_token, Rails.application.credentials.fetch(:secret_key_base)).first
               current_user = User.find(jwt_payload['sub'])
-            rescue JWT::ExpiredSignature
+            rescue JWT::ExpiredSignatureThe migration file you provided seems correct. It adds a column named 'jti' to the 'users' table with a string data type and a null: false constraint. Additionally, it adds an index on the 'jti' column with a unique constraint.
               render json: { error: "Token has expired. Please log in again." }, status: :unauthorized
             end
         else

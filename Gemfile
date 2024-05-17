@@ -54,14 +54,10 @@ gem 'rswag-ui'
 gem 'rswag-api'
 gem 'brick'
 
-gem 'elasticsearch-rails', '~> 7.0'
-
 gem 'shrine'
 
 gem 'rubocop', require: false
 
-
 gem "image_processing", ">= 1.2"
-
 
 gem "sidekiq", "~> 7.2"
